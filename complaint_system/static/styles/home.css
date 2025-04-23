@@ -1,0 +1,11 @@
+.card p {
+    font-family: "Open Sans", sans-serif;
+}
+
+.register-link p,
+.login-link p,
+.text-center a {
+    font-family: "Poppins", sans-serif;
+    font-size: 0.9rem;
+    text-decoration: none;
+}

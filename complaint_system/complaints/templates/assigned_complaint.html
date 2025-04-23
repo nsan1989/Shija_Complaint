@@ -1,0 +1,99 @@
+{% extends 'index.html' %} 
+{% load static %}
+
+{% block title %} 
+Assigned Complaint 
+{% endblock %}
+
+{% block start %}
+<link rel="stylesheet" href="{% static 'styles/assigned_complaint.css' %}" />
+
+<div class="container mt-5">
+  <div class="row py-5">
+    <div class="col-12">
+      <div class="content-title">
+        <h3>Assigned Complaints</h3>
+      </div>
+    </div>
+    
+{% if messages %}
+{% for message in messages %}
+  <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+    <div class="col-12 table-responsive">
+      <table class="table table-bordered">
+        <thead class="table-info">
+          <tr style="font-family: 'Open Sans', sans-serif;">
+            <th scope="col">Status</th>
+            <th scope="col">Assign Department</th>
+            <th scope="col">Created At</th>
+            <th scope="col">Update Status</th>
+            <th scope="col">Updated At</th>
+            <th scope="col">View Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if page_obj %}
+          {% for complaints in page_obj %}
+          <tr style="font-family: 'Poppins', sans-serif;">
+            <td>{{complaints.complaint.status}}</td>
+            <td>{{complaints.complaint.department}}</td>
+            <td>{{complaints.complaint.created_at}}</td>
+            {% if complaints.complaint.status != 'Cancelled' and complaints.complaint.status != 'Resolved' %}
+            <td>
+              <form method="POST" action="{% url 'admin_update_complaint_status' complaints.id %}">
+                {% csrf_token %}
+                <select name="status" required>
+                  <option value="">select</option>
+                  <option value="In Progress" {% if complaints.status == 'In Progress' %} selected {% endif %}>In Progress</option>
+                  <option value="Resolved" {% if complaints.status == 'Resolved' %} selected {% endif %}>Resolved</option>
+                </select>
+                <button class="btn btn-sm btn-primary" type="submit">Update</button>
+              </form>
+            </td>
+            {% else %}
+            <td>--</td>
+            {% endif %}
+            {% if complaints.status_change_to != 'In Progress' or complaints.status_change_to != 'Resolved' %}
+            <td>{{complaints.timestamp}}</td>
+            {% else %}
+            <td>Not yet updated!</td>
+            {% endif %}
+            <td><a href="{% url 'assigned_complaint_details' complaints.complaint.id %}" style="text-decoration: none;">View</a></td>
+          </tr>
+          {% endfor %}
+          <nav>
+            <ul class="pagination">
+              {% if page_obj.has_previous %}
+                <li class="page-item">
+                  <a class="page-link" href="?{% if selected_department %}department={{ selected_department }}&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+              {% endif %}
+        
+              {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                  <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% else %}
+                  <li class="page-item">
+                    <a class="page-link" href="?{% if selected_department %}department={{ selected_department }}&{% endif %}page={{ num }}">{{ num }}</a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+        
+              {% if page_obj.has_next %}
+                <li class="page-item">
+                  <a class="page-link" href="?{% if selected_department %}department={{ selected_department }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+              {% endif %}
+            </ul>
+          </nav>
+          {% else %}
+              <p>No complaints assigned!</p>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

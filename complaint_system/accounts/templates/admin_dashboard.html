@@ -1,0 +1,105 @@
+{% extends 'index.html' %} 
+{% load static %} 
+
+{% block title %} 
+Admin Dashboard 
+{% endblock %} 
+
+{% block start %}
+<link rel="stylesheet" href="{% static 'styles/common.css' %}" />
+
+<div class="container py-5">
+  <div class="row mb-4">
+    <div class="col dashboard-title text-center pt-5">
+      <h3 class="fw-bold">Dashboard</h3>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Charts Section -->
+    <div class="col-12 col-lg-8">
+      <div class="row g-4">
+        <!-- Created Chart -->
+        <div class="col-12">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+              <h5 class="card-title mb-3">Created Chart</h5>
+              {% if created_chart %}
+              <div class="ratio ratio-4x3" style="max-width: 25rem; margin: 0 auto;">
+                <img
+                  src="data:image/png;base64,{{ created_chart }}"
+                  alt="Created Chart"
+                  class="img-fluid"
+                  style="object-fit: contain; width: 100%; height: 100%;"
+                />
+              </div>
+              {% else %}
+              <p class="text-muted">No data to render chart.</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Assigned Chart -->
+        <div class="col-12">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+              <h5 class="card-title mb-3">Assigned Chart</h5>
+              {% if assign_chart %}
+              <div class="ratio ratio-4x3" style="max-width: 25rem; margin: 0 auto;">
+                <img
+                  src="data:image/png;base64,{{ assign_chart }}"
+                  alt="Assigned Chart"
+                  class="img-fluid"
+                  style="object-fit: contain; width: 100%; height: 100%;"
+                />
+              </div>
+              {% else %}
+              <p class="text-muted">No data to render chart.</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cards Section -->
+    <div class="col-12 col-lg-4 d-flex flex-column gap-4">
+      <!-- Complaints Card -->
+      <div class="card h-100 shadow-sm">
+        <div
+          class="card-body text-center d-flex flex-column justify-content-center"
+        >
+          <h5 class="card-title">Raised Complaints</h5>
+          <p class="fs-4 mb-3">{{ complain|default:"0" }}</p>
+          {% if created_complain %}
+          <a
+            href="{% url 'staff_complaints_history' %}"
+            class="btn btn-outline-primary w-100"
+            >View Complaints</a
+          >
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Assigned Tasks Card -->
+      <div class="card h-100 shadow-sm">
+        <div
+          class="card-body text-center d-flex flex-column justify-content-center"
+        >
+          <h5 class="card-title">Assigned Tasks</h5>
+          <p class="fs-4 mb-3">{{ assign_complain|default:"0" }}</p>
+          {% if assign_complain %}
+          <a
+            href="{% url 'staff_complaints_history' %}"
+            class="btn btn-outline-primary w-100"
+            >View Complaints</a
+          >
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

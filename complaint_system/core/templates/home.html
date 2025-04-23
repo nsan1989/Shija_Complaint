@@ -1,0 +1,30 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block start %}
+<link rel="stylesheet" href="{% static 'styles/home.css' %}" />
+
+<div class="container d-flex flex-column justify-content-center align-items-center h-100">
+    <div class="row justify-content-center align-items-center w-100 h-100 p-3">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+            <div class="card shadow rounded-4 border-0 p-4">
+                <h1 class="text-center fw-bold mb-4" style="font-family: 'Open Sans', sans-serif; color: #800000;">Complaint Management System</h1>
+                
+                <div class="mb-4 text-center">
+                    <p class="mb-2">New user?</p>
+                    <a href="{% url 'register' %}" class="btn btn-outline-primary w-100">Register</a>
+                </div>
+
+                <div class="text-center">
+                    <p class="mb-2">Returning user?</p>
+                    <a href="{% url 'login' %}" class="btn btn-primary w-100">Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

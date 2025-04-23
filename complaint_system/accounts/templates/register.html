@@ -1,0 +1,36 @@
+{% extends 'index.html' %} 
+{% load crispy_forms_tags %} 
+{% load static %}
+
+{% block title %}
+Register
+{% endblock %}
+
+{% block start %}
+<link rel="stylesheet" href="{% static 'styles/common.css' %}" />
+
+<div
+  class="registerForm container mt-5"
+>
+  <div class="row d-flex justify-content-center p-5">
+    {% if messages %} 
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} text-center">{{ message }}</div>
+    {% endfor %} 
+    {% endif %}
+    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 border p-3 rounded shadow">
+      <form method="post">
+        {% csrf_token %} 
+        {{form | crispy}}
+        <div class="sign-up-link d-grid gap-2 mt-3">
+          <button type="submit" class="btn btn-md btn-primary">Sign up</button>
+        </div>
+        <hr />
+        <div class="login-link text-center" style="font-family: 'Poppins', sans-serif; font-size: 0.9rem;">
+          <p>Already registered!&nbsp;<a href="{% url 'login' %}" style="text-decoration: none;">Login</a></p>
+        </div>
+      </form>
+    </div>
+  </div>                                    
+</div>
+{% endblock %}

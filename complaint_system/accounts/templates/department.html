@@ -1,0 +1,36 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block title %}
+Department
+{% endblock %}
+
+{% block start %}
+<link rel="stylesheet" href="{% static 'styles/common.css' %}" />
+
+<div class="container mt-5 py-3">
+    <div class="row py-4">
+        <div class="col-12 col-md-8 col-lg-6 w-100">
+            <div class="content-title">
+                <h3 style="color: #800000;">All Departments</h3>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-primary">
+                      <tr style="font-family: 'Open Sans', sans-serif;">
+                        <th scope="col">Department Names</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for dept in dept %}
+                      <tr style="font-family: 'Poppins', sans-serif;">
+                        <td>{{dept.name}}</td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

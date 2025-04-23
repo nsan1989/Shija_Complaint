@@ -1,0 +1,139 @@
+{% load static %} 
+
+{% block start %}
+<link rel="stylesheet" href="{% static 'styles/header.css' %}" />
+
+<header>
+  <nav class="navbar navbar-dark bg-white fixed-top px-3 border-bottom shadow-sm">
+    <div class="d-flex align-items-center">
+      {% if request.user.is_authenticated %}
+      <!-- Toggle Button -->
+      <button class="btn me-2 p-1" id="menu-toggle">
+        <i class="fa-solid fa-bars fa-lg" style="color: #800000; background-color: transparent;"></i>
+      </button>
+      {% endif %}
+      <!-- Brand -->
+      <a class="navbar-brand ms-2 mb-0 h1 d-flex align-items-center fw-bold" href="" style="color: #800000;">
+        <img class="img-fluid" src="../../static/images/logonew.jpg" style="width: 40px;height: auto;">
+        &nbsp;
+        ShijaCMS
+      </a>
+    </div>
+
+    <!-- Right Side Account -->
+    {% if request.user.is_authenticated %}
+     <div>
+      <i class="fa-solid fa-bell fa-lg" style="color: #800000;"></i>
+     </div>
+     {% endif %}
+  </nav>
+  <div
+    class="d-flex flex-column sidebar mt-2"
+    id="sidebar"
+    style="background-color: #800000;"
+  >
+    <ul>
+      <!--Super Admin Dashboard-->
+      {% if request.user.role == 'Super Admin' %}
+      <li>
+        <a class="nav-link" href="{% url 'super_admin' %}">
+          <i class="fa-solid fa-tv"></i><span>Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a class="nav-link" href="{% url 'all_users' %}">
+          <i class="fa-solid fa-circle-user"></i><span>Users</span>
+        </a>
+      </li>
+      <li>
+        <a class="nav-link" href="{% url 'departments' %}">
+          <i class="fa-solid fa-building"></i><span>Departments</span>
+        </a>
+      </li>
+      <li>
+        <a class="nav-link" href="{% url 'overall_complaint' %}">
+          <i class="fa-regular fa-flag"></i>
+        <span>Complaints</span>
+      </a>
+      </li>
+      <li>
+        <a class="nav-link" href="{% url 'super_admin_profile' %}">
+        <i class="fa-solid fa-circle-user"></i>
+        <span>Profile</span>
+      </a>
+      </li>
+      <!--Admin Dashboard-->
+      {% elif request.user.role == 'Admin' %}
+      <li>
+        <a class="nav-link" href="{% url 'staff_admin' %}">
+          <i class="fa-solid fa-tv"></i>
+        <span>Dashboard</span>
+      </a>
+      </li>
+      <li>
+        <a class="nav-link" href="{% url 'incharge_complaints_history' %}">
+          <i class="fa-regular fa-flag"></i>
+        <span>Complaints</span>
+      </a>
+      </li>
+      <li>
+        <a class="nav-link" href="{% url 'assigned_complaint' %}">
+          <i class="fa-solid fa-list-check"></i>
+        <span>My Tasks</span>
+      </a>
+      </li>
+      <li>
+        <a class="nav-link" href="{% url 'incharge_profile' %}">
+        <i class="fa-solid fa-circle-user"></i>
+        <span>Profile</span>
+      </a>
+      </li>
+      <!--User Dashboard-->
+      {% elif request.user.role == 'User' %}
+      <li>
+        <a class="nav-link" href="{% url 'staff' %}">
+          <i class="fa-solid fa-tv"></i>
+        <span>Dashboard</span>
+      </a>
+      </li>
+      <li>
+        <a class="nav-link" href="{% url 'staff_complaints_history' %}">
+          <i class="fa-regular fa-flag"></i>
+        <span>Complaints</span>
+      </a>
+      </li>
+      <li>
+        <a class="nav-link" href="{% url 'staff_assigned_tasks' %}">
+          <i class="fa-solid fa-list-check"></i>
+        <span>My Tasks</span>
+      </a>
+      </li>
+      <li>
+        <a class="nav-link" href="{% url 'staff_profile' %}">
+        <i class="fa-solid fa-circle-user"></i>
+        <span>Profile</span>
+      </a>
+      </li>
+      {% endif %}
+    </ul>
+    {% if request.user.is_authenticated %}
+    <form method="POST" action="{% url 'logout' %}" class="text-center mb-3" style="font-size: 0.9rem;">
+      {% csrf_token %}
+      <button type="submit" class="btn text-white d-flex align-items-center">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Logout</span>
+      </button>
+    </form>    
+    {% endif %}
+  </div>
+</header>
+<script>
+  const toggleBtn = document.getElementById("menu-toggle");
+  const sidebar = document.getElementById("sidebar");
+
+  toggleBtn.addEventListener("click", () => {
+    sidebar.classList.toggle("expanded");
+    sidebar.classList.toggle("show-sidebar");
+  });
+</script>
+{% endblock %}

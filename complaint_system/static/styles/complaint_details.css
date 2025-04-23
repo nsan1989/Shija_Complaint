@@ -1,0 +1,9 @@
+.content-title h3 {
+    font-family: "Open Sans", sans-serif;
+    font-weight: bold;
+}
+
+.d-flex span,
+.d-flex span p {
+    font-family: "poppins", sans-serif;
+}

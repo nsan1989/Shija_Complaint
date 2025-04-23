@@ -1,0 +1,42 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block title %}
+All Users
+{% endblock %}
+
+{% block start %}
+<link rel="stylesheet" href="{% static 'styles/common.css' %}" />
+
+<div class="container mt-5 py-3">
+    <div class="row py-4">
+        <div class="col-12 col-md-8 col-lg-6 w-100">
+            <div class="content-title">
+                <h3 style="color: #800000;">Registered Users</h3>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-primary">
+                      <tr style="font-family: 'Open Sans', sans-serif;">
+                        <th scope="col">Name</th>
+                        <th scope="col">Department</th>
+                        <th scope="col">Designation</th>
+                        <th scope="col">Role</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for users in all_users %}
+                      <tr style="font-family: 'Poppins', sans-serif;">
+                        <td>{{users.username}}</td>
+                        <td>{{users.department}}</td>
+                        <td>{{users.designation}}</td>
+                        <td>{{users.role}}</td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

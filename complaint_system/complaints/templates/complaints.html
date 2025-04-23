@@ -1,0 +1,61 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %} 
+{% load static %}
+
+{% block title %}
+Complaints
+{% endblock %}
+
+{% block start %}
+<link rel="stylesheet" href="{% static 'styles/complaints.css' %}" />
+
+<div class="container mt-5">
+    <div class="row d-flex justify-content-center py-5">
+      <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+          <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-body p-4">
+              <h4 class="card-title text-center mb-4">Complaint Form</h4>
+              <form method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+    
+                <div class="d-grid mt-4">
+                  <button type="submit" class="btn btn-lg" style="border: 1px solid #800000; color: #800000;">Submit</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('#id_department').change(function () {
+      const url = "{% url 'ajax_load_complaint_types' %}";
+      const departmentId = $(this).val();
+
+      $.ajax({
+        url: url,
+        data: {
+          'department': departmentId
+        },
+        success: function (data) {
+          const complaintTypeSelect = $('#id_complaint_type');
+          complaintTypeSelect.empty();
+          complaintTypeSelect.append('<option value="">Select Complaint Type</option>');
+          data.forEach(function (item) {
+            complaintTypeSelect.append(`<option value="${item.id}">${item.name}</option>`);
+          });
+
+          if (data.length === 1) {
+            complaintTypeSelect.val(data[0].id);
+          }
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

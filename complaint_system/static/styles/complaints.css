@@ -1,0 +1,12 @@
+.card-title {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: bold;
+    color: #800000;
+}
+
+#div_id_title,
+#div_id_department,
+#div_id_complaint_type,
+#div_id_description {
+    font-family: 'Poppins', sans-serif;
+}

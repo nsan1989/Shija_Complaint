@@ -1,0 +1,58 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block title %}
+Complaint Details
+{% endblock %}
+
+{% block start %}
+<link rel="stylesheet" href="{% static 'styles/complaint_details.css' %}" />
+
+    <div class="container mt-5">
+        <div class="row py-5">
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <div class="content-title">
+                    <h3>Complaint Details</h3>
+                </div>
+            </div>
+            <div class="col-12">
+                {% if complaint %}
+                <ul class="ps-0">
+                  <li class="d-flex"><span class="fw-bold">Complaint:</span>&nbsp;<p>{{complaint.complaint.complaint_type}}</p></li>
+                  <li class="d-flex"><span class="fw-bold">Description:</span>&nbsp;<p>{{complaint.complaint.description}}</p></li>
+                  <li class="d-flex"><spna class="fw-bold">Status:</spna>&nbsp;<p>{{complaint.status_changed_to}}</p></li>
+                </ul>
+                {% else %}
+                <p>No complaint details found.</p>
+                {% endif %}
+            </div>
+            <div class="col-12 table-responsive">
+              <div class="table-title">
+                <h5>Complaint Remarks</h5>
+              </div>
+                <table class="table table-bordered">
+                  <thead class="table-primary">
+                    <tr>
+                      <th scope="col">Remark</th>
+                      <th scope="col">Created By</th>
+                      <th scope="col">Created At</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      {% if remarks %}
+                    {% for remark in remarks %}
+                    <tr>
+                      <td>{{remark.remarks}}</td>
+                      <td>{{remark.created_by}}</td>
+                      <td>{{remark.created_at}}</td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr><td>No Remarks!</td></tr>
+                    {% endif %}
+                  </tbody>
+                </table>
+              </div>
+        </div>
+    </div>
+{% endblock %}

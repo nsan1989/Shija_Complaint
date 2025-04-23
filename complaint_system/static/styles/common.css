@@ -1,0 +1,32 @@
+.content-wrapper {
+    margin-top: 10vh;
+}
+
+.nav-link {
+    text-decoration: none;
+}
+
+#div_id_username,
+#div_id_department,
+#div_id_designation,
+#div_id_password,
+#div_id_password1,
+#dev_id_password2 {
+    font-family: "Poppins", sans-serif;
+    font-size: 0.9rem;
+}
+
+.chart-title h3,
+.content-title h3,
+.dashboard-title h3,
+.content-title p,
+.complaint-title h3 {
+    font-family: "Open Sans", sans-serif;
+    font-weight: bold;
+}
+
+.complaint-link p,
+.alternate-text p {
+    font-family: "Poppins", sans-serif;
+    font-style: normal;
+}

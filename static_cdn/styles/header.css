@@ -1,0 +1,90 @@
+.navbar-brand {
+  font-family: "Open Sans", sans-serif;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+#sidebar {
+  width: auto;
+  transition: transform 0.3s ease-in-out, width 0.3s;
+  overflow-x: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  padding-top: 60px;
+  z-index: 999;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+}
+
+#sidebar.expanded {
+  width: 200px;
+}
+
+#sidebar ul {
+  padding-left: 0;
+  list-style: none;
+}
+
+#sidebar li {
+  padding: 15px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+#sidebar li:hover {
+  background-color: #660000;
+}
+
+#sidebar i {
+  font-size: 20px;
+  width: 30px;
+  text-align: center;
+}
+
+#sidebar span {
+  display: none;
+  margin-left: 10px;
+}
+
+#sidebar.expanded span {
+  display: inline;
+}
+
+@media (max-width: 991.98px) {
+  #sidebar {
+    transform: translateX(-100%);
+    width: 200px; /* set fixed width when sliding in */
+  }
+
+  #sidebar.show-sidebar {
+    transform: translateX(0);
+  }
+
+  /* Optional: Hide span on mobile until expanded */
+  #sidebar span {
+    display: inline;
+  }
+}
+
+@media (min-width: 991.98px) {
+  #sidebar {
+    transform: none;
+    width: auto;
+  }
+
+  #sidebar.expanded {
+    width: 200px;
+  }
+
+  #sidebar span {
+    display: none;
+  }
+
+  #sidebar.expanded span {
+    display: inline;
+  }
+}
