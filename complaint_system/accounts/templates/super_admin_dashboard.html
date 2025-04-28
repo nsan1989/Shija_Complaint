@@ -9,74 +9,75 @@ Dashboard
 <link rel="stylesheet" href="{% static 'styles/common.css' %}" />
 
     <div class="container mt-5 py-3">
-      <div class="row justify-content-between gy-4 py-4">
-        <div class="col-12 col-md-8 col-lg-6">
+      <div class="row gy-4 py-4">
+        <div class="col-12">
           <div class="content-title">
             <h3 style="color: #800000;">DASHBOARD</h3>
           </div>
+        </div>
+      </div>
+      <div class="row d-flex justify-content-between">
+        <div class="col-sm-12 col-xs-12 col-md-4 col-lg-4 col-xl-4 mb-2" style="height: 10rem;">
+          <div class="card complaint_card shadow w-100 h-100">
+            {% if complaints %}
+            <div class="card-body text-center d-flex flex-column justify-content-center">
+              <i class="fa-regular fa-flag fa-xl m-3" style="color: #74C0FC;"></i></i>
+              <h5 class="card-title">Complaints</h5>
+              <p class="card-text fs-4 text-body-secondary">{{ complaints }}</p>
+            </div>
+            {% else %}
+            <div class="alternate-text">
+              <p class="py-4">No data to render!</p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-sm-12 col-xs-12 col-md-4 col-lg-4 col-xl-4 mb-2" style="height: 10rem;"> 
+          <div class="card department_card shadow w-100 h-100">
+            {% if departments %}
+            <div class="card-body text-center d-flex flex-column justify-content-center">
+              <i class="fa-solid fa-building fa-xl m-3" style="color: #74C0FC;"></i>
+              <h5 class="card-title">Departments</h5>
+              <p class="card-text fs-4 text-body-secondary">{{ departments }}</p>
+            </div>
+            {% else %}
+            <div class="alternate-text">
+              <p class="py-4">No data to render!</p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-sm-12 col-xs-12 col-md-4 col-lg-4 col-xl-4" style="height: 10rem;">
+          <div class="card shadow users_card w-100 h-100">
+            {% if users %}
+            <div class="card-body text-center d-flex flex-column justify-content-center">
+              <i class="fa-solid fa-circle-user fa-xl m-3" style="color: #74C0FC;"></i>
+              <h5 class="card-title">Users</h5>
+              <p class="card-text fs-4 text-body-secondary">{{ users }}</p>
+            </div>
+            {% else %}
+            <div class="alternate-text">
+              <p class="py-4">No data to render!</p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center p-3">
+        <div class="col-12 shadow p-4 rounded">
           {% if chart %}
-          <div class="chart-content">
+          <div class="chart-content ratio ratio-4x3" style="max-width: 20rem; margin: 0 auto">
             <img
               class="img-fluid mx-auto d-block"
               src="data:image/png;base64,{{ chart }}"
               alt="Chart"
-              style="width: 25rem;height: auto;"
+              style="object-fit: contain; width: 100%; height: 100%"
             />
           </div>{% else %}
           <div class="alternate-text">
               <p>No data to render chart.</p>
           </div>
           {% endif %}
-        </div>
-        <div class="col-12 col-md-6 col-lg-4">
-          <div class="mb-4">
-          <div class="card shadow w-100">
-            {% if complaints %}
-            <div class="card-body text-center d-flex flex-column justify-content-center">
-              <h5 class="card-title" style="color: #800000;">Complaints</h5>
-              <p class="card-text fs-4 text-body-secondary">{{ complaints }}</p>
-              <a href="{% url 'overall_complaint' %}" class="btn w-100" style="border: 1px solid #800000; color: #800000;">View Complaints</a
-              >
-            </div>
-            {% else %}
-            <div class="alternate-text">
-              <p class="py-4">No data to render!</p>
-            </div>
-            {% endif %}
-          </div>
-        </div>
-        <div class="mb-4">
-          <div class="card shadow w-100">
-            {% if departments %}
-            <div class="card-body text-center d-flex flex-column justify-content-center">
-              <h5 class="card-title" style="color: #800000;">Departments</h5>
-              <p class="card-text fs-4 text-body-secondary">{{ departments }}</p>
-              <a href="{% url 'departments' %}" class="btn w-100" style="border: 1px solid #800000; color: #800000;">View Departments</a
-              >
-            </div>
-            {% else %}
-            <div class="alternate-text">
-              <p class="py-4">No data to render!</p>
-            </div>
-            {% endif %}
-          </div>
-        </div>
-        <div>
-          <div class="card shadow w-100">
-            {% if users %}
-            <div class="card-body text-center d-flex flex-column justify-content-center">
-              <h5 class="card-title" style="color: #800000;">Users</h5>
-              <p class="card-text fs-4 text-body-secondary">{{ users }}</p>
-              <a href="{% url 'all_users' %}" class="btn w-100" style="border: 1px solid #800000; color: #800000;">View Users</a
-              >
-            </div>
-            {% else %}
-            <div class="alternate-text">
-              <p class="py-4">No data to render!</p>
-            </div>
-            {% endif %}
-          </div>
-        </div>
         </div>
     </div>
     </div>

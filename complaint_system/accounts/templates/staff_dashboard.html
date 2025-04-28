@@ -8,98 +8,91 @@ Dashboard
 {% block start %}
 <link rel="stylesheet" href="{% static 'styles/common.css' %}" />
 
-<div class="container py-5">
-  <div class="row mb-4">
-    <div class="col text-center pt-5">
-      <h2 class="fw-bold">Dashboard</h2>
-    </div>
-  </div>
-  <div class="row g-4">
-    <!-- Charts Section -->
-    <div class="col-12 col-lg-8">
-      <div class="row g-4">
-        <!-- Created Chart -->
-        <div class="col-12">
-          <div class="card h-100 shadow-sm">
-            <div class="card-body text-center">
-              <h5 class="card-title mb-3">Created Chart</h5>
-              {% if created_chart %}
-              <div
-                class="ratio ratio-4x3"
-                style="max-width: 20rem; margin: 0 auto"
-              >
-                <img
-                  src="data:image/png;base64,{{ created_chart }}"
-                  alt="Created Chart"
-                  class="img-fluid"
-                  style="object-fit: contain; width: 100%; height: 100%"
-                />
-              </div>
-              {% else %}
-              <p class="text-muted">No data to render chart.</p>
-              {% endif %}
-            </div>
-          </div>
-        </div>
-
-        <!-- Assigned Chart -->
-        <div class="col-12">
-          <div class="card h-100 shadow-sm">
-            <div class="card-body text-center">
-              <h5 class="card-title mb-3">Assigned Chart</h5>
-              {% if assign_chart %}
-              <div
-                class="ratio ratio-4x3"
-                style="max-width: 20rem; margin: 0 auto"
-              >
-                <img
-                  src="data:image/png;base64,{{ assign_chart }}"
-                  alt="Assigned Chart"
-                  class="img-fluid"
-                  style="object-fit: contain; width: 100%; height: 100%"
-                />
-              </div>
-              {% else %}
-              <p class="text-muted">No data to render chart.</p>
-              {% endif %}
-            </div>
-          </div>
-        </div>
+<div class="container mt-5 py-3">
+  <div class="row gy-4 py-4">
+    <div class="col-12">
+      <div class="content-title">
+        <h3 style="color: #800000;">DASHBOARD</h3>
       </div>
     </div>
-
-    <!-- Cards Section -->
-    <div class="col-12 col-lg-4 d-flex flex-column gap-4">
-      <!-- Complaints Card -->
+  </div>
+  <div class="row d-flex justify-content-start">
+    <div class="col-sm-12 col-xs-12 col-md-4 col-lg-4 col-xl-4 mb-2" style="height: 10rem;">
+      <div class="card complaint_card shadow w-100 h-100">
+        {% if complaints %}
+        <div class="card-body text-center d-flex flex-column justify-content-center">
+          <i class="fa-regular fa-flag fa-xl m-3" style="color: #74C0FC;"></i></i>
+          <h5 class="card-title">Complaints</h5>
+          <p class="card-text fs-4 text-body-secondary">{{ complaints }}</p>
+        </div>
+        {% else %}
+        <div class="card-body text-center d-flex flex-column justify-content-center">
+          <i class="fa-regular fa-flag fa-xl m-3" style="color: #74C0FC;"></i></i>
+          <h5 class="card-title">Complaints</h5>
+          <p class="card-text fs-4 text-body-secondary">0</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-sm-12 col-xs-12 col-md-4 col-lg-4 col-xl-4 mb-2" style="height: 10rem;">
+      <div class="card task_card shadow w-100 h-100">
+        {% if assign_complaints %}
+        <div class="card-body text-center d-flex flex-column justify-content-center">
+          <i class="fa-regular fa-flag fa-xl m-3" style="color: #74C0FC;"></i></i>
+          <h5 class="card-title">Tasks</h5>
+          <p class="card-text fs-4 text-body-secondary">{{ assign_complaints }}</p>
+        </div>
+        {% else %}
+        <div class="card-body text-center d-flex flex-column justify-content-center">
+          <i class="fa-solid fa-list-check fa-xl m-3" style="color: #74C0FC;"></i></i>
+          <h5 class="card-title">Tasks</h5>
+          <p class="card-text fs-4 text-body-secondary">0</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="row d-flex py-3 g-2">
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
       <div class="card h-100 shadow-sm">
-        <div
-          class="card-body text-center d-flex flex-column justify-content-center"
-        >
-          <h5 class="card-title">Raised Complaints</h5>
-          <p class="fs-4 mb-3">{{ complaints|default:"0" }}</p>
-          {% if complaints %}
-          <a
-            href="{% url 'staff_complaints_history' %}"
-            class="btn btn-outline-primary w-100"
-            >View Complaints</a
+        <div class="card-body text-center">
+          <h5 class="card-title mb-3">Created Chart</h5>
+          {% if created_chart %}
+          <div
+            class="ratio ratio-4x3"
+            style="max-width: 20rem; margin: 0 auto"
           >
+            <img
+              src="data:image/png;base64,{{ created_chart }}"
+              alt="Created Chart"
+              class="img-fluid"
+              style="object-fit: contain; width: 100%; height: 100%"
+            />
+          </div>
+          {% else %}
+          <p class="text-muted">No data to render chart.</p>
           {% endif %}
         </div>
       </div>
-
-      <!-- Assigned Tasks Card -->
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
       <div class="card h-100 shadow-sm">
-        <div
-          class="card-body text-center d-flex flex-column justify-content-center"
-        >
-          <h5 class="card-title">Assigned Tasks</h5>
-          <p class="fs-4 mb-3">{{ assign_complaints|default:"0" }}</p>
-          {% if assign_complaints %}
-          <a
-            href="{% url 'staff_complaints_history' %}"
-            class="btn btn-outline-primary w-100"
-            >View Complaints</a
+        <div class="card-body text-center">
+          <h5 class="card-title mb-3">Tasks</h5>
+          {% if assign_chart %}
+          <div
+            class="ratio ratio-4x3"
+            style="max-width: 20rem; margin: 0 auto"
           >
+            <img
+              src="data:image/png;base64,{{ assign_chart }}"
+              alt="Assigned Chart"
+              class="img-fluid"
+              style="object-fit: contain; width: 100%; height: 100%"
+            />
+          </div>
+          {% else %}
+          <p class="text-muted">No data to render chart.</p>
           {% endif %}
         </div>
       </div>

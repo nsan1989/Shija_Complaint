@@ -8,6 +8,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import io, base64
+from django.core.paginator import Paginator
 
 # Register View.
 def Register(request):
@@ -71,16 +72,22 @@ def Profile(request):
 # Department View
 def DepartmentView(request):
     department = Department.objects.all()
+    page_number = request.GET.get('page')
+    paginator = Paginator(department, 10)  
+    page_obj = paginator.get_page(page_number)
     context = {
-        'dept': department,
+        'dept': page_obj,
     }
     return render(request, 'department.html', context)
 
 # Users View
 def UsersView(request):
     all_users = CustomUser.objects.all()
+    page_number = request.GET.get('page')
+    paginator = Paginator(all_users, 10)  
+    page_obj = paginator.get_page(page_number)
     context = {
-        'all_users': all_users
+        'all_users': page_obj
     }
     return render(request, 'all_users.html', context)
 
