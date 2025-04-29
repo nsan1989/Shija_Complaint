@@ -21,7 +21,6 @@ class ComplaintForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super(ComplaintForm, self).__init__(*args, **kwargs)
-        # setting initial complaint_type data to none.
         self.fields['department'].queryset = Department.objects.annotate(
             has_complaints=Exists(
                 ComplaintType.objects.filter(department=OuterRef('pk'))

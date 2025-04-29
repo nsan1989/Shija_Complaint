@@ -8,7 +8,6 @@ USER = 'User'
 INCHARGE = 'In Charge'
 STAFF = 'Staff'
 
-
 # Role Choices.
 ROLE_CHOICES = (
     (SUPER_ADMIN, 'super admin'),
