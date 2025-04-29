@@ -74,7 +74,7 @@ def AssignedComplaint(request):
     paginator = Paginator(complaints, 10)  
     page_obj = paginator.get_page(page_number)
     context = {
-        'page_obj': page_obj,
+        'page_obj': page_obj
     }
     return render(request, 'assigned_complaint.html', context)
 
@@ -205,12 +205,13 @@ def ComplainHistory(request):
     return render(request, 'complaint_history.html', context)
 
 # Reassigned Complaint View.
-def ReassignedComplaint(request):
+def ReassignedComplaint(request, complaint_id):
+    complaint = get_object_or_404(Complaint, id=complaint_id)
     if request.method == 'POST':
         form = ReassignedForm(request.POST, request=request)
         if form.is_valid():
             reassign_complaint = form.save(commit=False)
-            reassign_complaint.complaint = form.cleaned_data['complaint']
+            reassign_complaint.complaint = complaint
             reassign_complaint.reassigned_to = form.cleaned_data['reassigned_to']
             reassign_complaint.save()
 
@@ -265,7 +266,10 @@ def RemarkComplaint(request, complaint_id):
             remark.created_by = request.user
             remark.save()
 
-            return redirect('assigned_complaint_details', id=complaint.id)
+            if request.user.designation == 'Staff':
+                return redirect('staff_assigned_tasks_details', id=complaint.id)
+            else:
+                return redirect('assigned_complaint_details', id=complaint.id)
 
     else:
         form = RemarkForm()

@@ -9,8 +9,8 @@ Login
 {% block start %}
 <link rel="stylesheet" href="{% static 'styles/common.css' %}" />
 
-<div class="loginForm container mt-5">
-  <div class="row d-flex justify-content-center p-5">
+<div class="loginForm container mt-5 h-100 d-flex align-items-center w-100">
+  <div class="row d-flex justify-content-center w-100 p-5">
     {% if messages %} 
     {% for message in messages %}
     <div class="alert alert-{{ message.tags }} text-center">{{ message }}</div>

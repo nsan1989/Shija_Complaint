@@ -40,21 +40,25 @@ Assigned Complaint
             <td>{{complaints.complaint.status}}</td>
             <td>{{complaints.complaint.department}}</td>
             <td>{{complaints.complaint.created_at}}</td>
-            {% if complaints.complaint.status != 'Cancelled' and complaints.complaint.status != 'Resolved' %}
-            <td>
-              <form method="POST" action="{% url 'admin_update_complaint_status' complaints.id %}">
-                {% csrf_token %}
-                <select name="status" required>
-                  <option value="">select</option>
-                  <option value="In Progress" {% if complaints.status == 'In Progress' %} selected {% endif %}>In Progress</option>
-                  <option value="Resolved" {% if complaints.status == 'Resolved' %} selected {% endif %}>Resolved</option>
-                </select>
-                <button class="btn btn-sm btn-primary" type="submit">Update</button>
-              </form>
-            </td>
-            {% else %}
-            <td>--</td>
-            {% endif %}
+            {% if complaints.complaint.assigned_to == request.user %}
+              {% if complaints.complaint.status != 'Cancelled' and complaints.complaint.status != 'Resolved' %}
+              <td>
+                <form method="POST" action="{% url 'admin_update_complaint_status' complaints.complaint.id %}">
+                  {% csrf_token %}
+                  <select name="status" required>
+                    <option value="">select</option>
+                    <option value="In Progress" {% if complaints.status == 'In Progress' %} selected {% endif %}>In Progress</option>
+                    <option value="Resolved" {% if complaints.status == 'Resolved' %} selected {% endif %}>Resolved</option>
+                  </select>
+                  <button class="btn btn-sm btn-primary" type="submit">Update</button>
+                </form>
+              </td>
+              {% else %}
+              <td>--</td>
+              {% endif %}
+              {% else %}
+              <td>--</td>
+              {% endif %}
             {% if complaints.status_change_to != 'In Progress' or complaints.status_change_to != 'Resolved' %}
             <td>{{complaints.timestamp}}</td>
             {% else %}

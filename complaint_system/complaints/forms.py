@@ -34,7 +34,7 @@ class ReassignedForm(forms.ModelForm):
 
     class Meta:
         model = ReassignedComplaint
-        fields = ['complaint', 'reassigned_to']
+        fields = ['reassigned_to']
     
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -44,10 +44,8 @@ class ReassignedForm(forms.ModelForm):
             user_department = getattr(self.request.user, 'department', None)
 
             if user_department:
-                self.fields['complaint'].queryset = Complaint.objects.filter(department=user_department)
                 self.fields['reassigned_to'].queryset = CustomUser.objects.filter(department=user_department).exclude(id=self.request.user.id)
             else:
-                self.fields['complaint'].queryset = Complaint.objects.none()
                 self.fields['reassigned_to'].queryset = CustomUser.objects.none()
 
 # Remark Form.

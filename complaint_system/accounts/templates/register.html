@@ -10,9 +10,9 @@ Register
 <link rel="stylesheet" href="{% static 'styles/common.css' %}" />
 
 <div
-  class="registerForm container mt-5"
+  class="registerForm container mt-5 d-flex align-items-center w-100"
 >
-  <div class="row d-flex justify-content-center p-5">
+  <div class="row d-flex justify-content-center p-5 w-100">
     {% if messages %} 
     {% for message in messages %}
     <div class="alert alert-{{ message.tags }} text-center">{{ message }}</div>
