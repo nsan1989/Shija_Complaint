@@ -1,12 +1,16 @@
 from django import forms
 from .models import Complaint, ComplaintType, ReassignedComplaint, ComplaintRemarks
-from accounts.models import CustomUser
+from accounts.models import CustomUser, Department
+from django.db.models import Exists, OuterRef
 
 # Complaint Form.
 class ComplaintForm(forms.ModelForm):
     class Meta:
         model = Complaint
         fields = ['department', 'complaint_type', 'location', 'description']
+        labels = {
+            'department': 'Concern Department'
+        }
 
         widgets = {
             'description': forms.Textarea(attrs={
@@ -18,6 +22,11 @@ class ComplaintForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ComplaintForm, self).__init__(*args, **kwargs)
         # setting initial complaint_type data to none.
+        self.fields['department'].queryset = Department.objects.annotate(
+            has_complaints=Exists(
+                ComplaintType.objects.filter(department=OuterRef('pk'))
+            )
+        ).filter(has_complaints=True)
         self.fields['complaint_type'].queryset = ComplaintType.objects.none()
 
         if 'department' in self.data:
