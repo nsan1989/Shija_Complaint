@@ -28,7 +28,7 @@ Complaint
     <div class="col-12 table-responsive pt-3">
       <table class="table table-bordered">
         <thead class="table-info">
-          <tr style="font-family:'Open Sans', sans-serif;">
+          <tr style="font-family:'Open Sans', sans-serif; font-size: 1rem;">
             <th scope="col">Concern Department</th>
             <th scope="col">Created On</th>
             <th scope="col">Status</th>
@@ -40,7 +40,7 @@ Complaint
         <tbody>      
           {% if page_obj %}
           {% for complaint in page_obj %}
-          <tr style="font-family:'Poppins', sans-serif;">
+          <tr style="font-family:'Poppins', sans-serif; font-size: 0.9rem;">
             <td>{{complaint.complaint.department}}</td>
             <td>{{complaint.complaint.created_at}}</td>
             <td>{{complaint.complaint.status}}</td>

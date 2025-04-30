@@ -25,7 +25,7 @@ def Register(request):
             user.save()
             return redirect('login')
         else:
-            messages.error(request, 'please enter correct data!') 
+            messages.error(request, 'please enter valid details!') 
     else:
         form = RegisterForm()
 
