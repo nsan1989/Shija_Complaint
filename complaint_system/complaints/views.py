@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.core.exceptions import PermissionDenied
 
 # views.py
 def load_complaint_types(request):
@@ -26,10 +27,14 @@ def ComplaintView(request):
             complaint_type = form.cleaned_data.get('complaint_type')
             if not complaint_type:
                 types = ComplaintType.objects.filter(department=department)
-                if types.count() == 1:
+                non_other_types = types.exclude(name__iexact='Others')
+                if non_other_types.count() == 1:
                     form.instance.complaint_type = types.first()
-                elif types.count() > 1:
+                elif non_other_types.count() > 1:
                     form.add_error('complaint_type', 'Please select a complaint type.')
+                    return render(request, 'complaints.html', {'form': form})
+                else:
+                    form.add_error('complaint_type', 'No valid complaint types found.')
                     return render(request, 'complaints.html', {'form': form})
             assigned_user = CustomUser.objects.filter(department=department, role='Admin').first()
             if assigned_user:
@@ -54,6 +59,11 @@ def ComplaintView(request):
 # All Complaints View
 def AllComplaintsView(request):
     user = request.user
+    path = request.path
+    try:
+        user_role = user.role
+    except:
+        raise PermissionDenied("User profile not found.")
     complaints = ComplaintHistory.objects.filter(complaint__created_by = user).order_by('complaint__created_at')
     page_number = request.GET.get('page')
     paginator = Paginator(complaints, 10)  
@@ -61,11 +71,20 @@ def AllComplaintsView(request):
     context = {
         'page_obj': page_obj,
     }
-    return render(request, 'all_complaints.html', context)
+    if path.startswith('/staff/raised_complaints/') and user_role == 'User':
+        return render(request, 'all_complaints.html', context)
+    if path.startswith('/incharge/raised_complaints/') and user_role == 'Admin':
+        return render(request, 'all_complaints.html', context)
+    raise PermissionDenied("You are not authorized to view this page.")
 
 # Assigned Complaint View.
 def AssignedComplaint(request):
     user = request.user
+    path = request.path
+    try:
+        user_role = user.role
+    except:
+        raise PermissionDenied("User profile not found.")
     complaints = ComplaintHistory.objects.filter(
         Q(complaint__assigned_to=user) | 
         Q(complaint__department=user.department)
@@ -76,10 +95,17 @@ def AssignedComplaint(request):
     context = {
         'page_obj': page_obj
     }
-    return render(request, 'assigned_complaint.html', context)
+    if path.startswith('/incharge/assigned_complaint/') and user_role == 'Admin':
+        return render(request, 'assigned_complaint.html', context)
+    raise PermissionDenied("You are not authorized to view this page.")
 
 # Assigned Complaint Details View.
 def AssignedComplaintDetails(request, id):
+    user = request.user
+    try:
+        user_role = user.role
+    except:
+        raise PermissionDenied("User profile not found.")
     complaint = get_object_or_404(ComplaintHistory, complaint_id=id)
     remark = ComplaintRemarks.objects.filter(complaint_id=id)
 
@@ -87,10 +113,18 @@ def AssignedComplaintDetails(request, id):
         'complaint': complaint,
         'remarks': remark
     }
-    return render(request, 'assigned_complaint_details.html', context)
+    view_name = request.resolver_name.view_name
+    if view_name == 'assigned_complaint_details' and user_role == 'Admin':
+        return render(request, 'assigned_complaint_details.html', context)
+    raise PermissionDenied("You are not authorized to view this page.")
 
 # Staff Update Complaint Status View.
 def StaffUpdateComplaintStatus(request, id):
+    user = request.user
+    try:
+        user_role = user.role
+    except:
+        raise PermissionDenied("User Profile not found.")
     complaint = get_object_or_404(ComplaintHistory, id=id)
 
     if complaint.complaint.assigned_to != request.user:
@@ -113,11 +147,18 @@ def StaffUpdateComplaintStatus(request, id):
             complaint.complaint.save()
 
             messages.success(request, "Status updated successfully.")
-
-    return redirect('staff_assigned_tasks')
+    view_name = request.resolver_name.view_name
+    if view_name == 'staff_update_complaint_status' and user_role == 'Admin':
+        return redirect('staff_assigned_tasks')
+    raise PermissionDenied("You are not authorized to view this page.")
 
 # Admin Update Complaint Status View.
 def AdminUpdateComplaintStatus(request, id):
+    user = request.user
+    try:
+        user_role = user.role
+    except:
+        raise PermissionDenied("User profile not found.")
     complaint = get_object_or_404(ComplaintHistory, id=id)
 
     if complaint.complaint.assigned_to != request.user:
@@ -140,8 +181,10 @@ def AdminUpdateComplaintStatus(request, id):
             complaint.complaint.save()
 
             messages.success(request, "Status updated successfully.")
-
-    return redirect('assigned_complaint')
+    view_name = request.resolver_name.view_name
+    if view_name == 'admin_update_complaint_status' and user_role == 'Admin':
+        return redirect('assigned_complaint')
+    raise PermissionDenied("You are not authorized to view this page.")
 
 # Cancel Complaint View.
 def CancelComplaint(request, id):
@@ -169,6 +212,11 @@ def CancelComplaint(request, id):
 
 # Complaint Details View.
 def ComplaintDetails(request, id):
+    user = request.user
+    try:
+        user_role = user.role
+    except:
+        raise PermissionDenied("User profile not found.")
     complaint = get_object_or_404(ComplaintHistory, complaint_id=id)
     remark = ComplaintRemarks.objects.filter(complaint_id=id)
     
@@ -177,7 +225,12 @@ def ComplaintDetails(request, id):
         'remarks': remark
     }
     
-    return render(request, 'complaint_details.html', context)
+    view_name = request.resolver_match.view_name
+    if view_name == 'staff_complaints_details' and user_role == 'User':
+        return render(request, 'complaint_details.html', context)
+    if view_name == 'incharge_complaints_details' and user_role == 'Admin':
+        return render(request, 'complaint_details.html', context)
+    raise PermissionDenied("You are not authorized to view this page.")
 
 # Complain History View.
 def ComplainHistory(request):
@@ -231,6 +284,11 @@ def ReassignedComplaint(request, complaint_id):
 # Assigned Tasks View.
 def AssignedTasks(request):
     user = request.user
+    path = request.path
+    try:
+        user_role = user.role
+    except:
+        raise PermissionDenied("User profile not found.")
     assign_complaints = ComplaintHistory.objects.filter(complaint__assigned_to = user).order_by('complaint__created_at')
     page_number = request.GET.get('page')
     paginator = Paginator(assign_complaints, 10)  
@@ -238,10 +296,17 @@ def AssignedTasks(request):
     context = {
         'page_obj': page_obj,
     }
-    return render(request, 'assigned_tasks.html', context)
+    if path.startswith('/staff/assigned_tasks/') and user_role == 'User':
+        return render(request, 'assigned_tasks.html', context)
+    raise PermissionDenied("You are not authorized to view this page.")
 
 # Assigned Task Details
 def AssignedTaskDetails(request, id):
+    user = request.user
+    try:
+        user_role = user.role
+    except:
+        raise PermissionDenied("User profile not found.")
     complaint = get_object_or_404(ComplaintHistory, complaint_id=id)
     remark = ComplaintRemarks.objects.filter(complaint_id=id)
 
@@ -252,7 +317,10 @@ def AssignedTaskDetails(request, id):
         'task': complaint,
         'remarks': remark
     }
-    return render(request, 'assigned_task_details.html', context)
+    view_name = request.resolver_match.view_name
+    if view_name == 'staff_assigned_tasks_details' and user_role == 'User':
+        return render(request, 'assigned_task_details.html', context)
+    raise PermissionDenied("You are not authorized to view this page.")
 
 # Complaint Remark View.
 def RemarkComplaint(request, complaint_id):

@@ -9,6 +9,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import io, base64
 from django.core.paginator import Paginator
+from django.core.exceptions import PermissionDenied
 
 # Register View.
 def Register(request):
@@ -64,13 +65,26 @@ def Login(request):
 # Profile View.
 def Profile(request):
     new_user = request.user
-    context = {
-        'user': new_user
-    }
-    return render(request, 'profile.html', context)
+    path = request.path
+    try:
+        user_role = new_user.role
+    except AttributeError:
+        raise PermissionDenied("User profile not found.")
+    
+    if path.startswith('/staff/profile_details/') and user_role == 'User':
+        return render(request, 'profile.html', {'user': new_user})
+    if path.startswith('/incharge/profile_details/') and user_role == 'Admin':
+        return render(request, 'profile.html', {'user': new_user})
+    raise PermissionDenied("You are not authorized to view this page.")
 
 # Department View
 def DepartmentView(request):
+    user = request.user
+    path = request.path
+    try:
+        user_role = user.role
+    except:
+        raise PermissionDenied("User profile not found.")
     department = Department.objects.all()
     page_number = request.GET.get('page')
     paginator = Paginator(department, 10)  
@@ -78,10 +92,18 @@ def DepartmentView(request):
     context = {
         'dept': page_obj,
     }
-    return render(request, 'department.html', context)
+    if path.startswith('/super_admin/departments/') and user_role == 'Super Admin':
+        return render(request, 'department.html', context)
+    raise PermissionDenied("You are not authorized to view this page.")
 
 # Users View
 def UsersView(request):
+    user = request.user
+    path = request.path
+    try:
+        user_role = user.role
+    except:
+        raise PermissionDenied("User profile not found.")
     all_users = CustomUser.objects.all()
     page_number = request.GET.get('page')
     paginator = Paginator(all_users, 10)  
@@ -89,10 +111,18 @@ def UsersView(request):
     context = {
         'all_users': page_obj
     }
-    return render(request, 'all_users.html', context)
+    if path.startswith('/super_admin/all_users/') and user_role == 'Super Admin':
+        return render(request, 'all_users.html', context)
+    raise PermissionDenied("You are not authorized to view this page.")
 
 #Super Admin View
 def SuperAdminView(request):
+    user = request.user
+    path = request.path
+    try:
+        user_role = user.role
+    except AttributeError:
+        raise PermissionDenied("User profile not found.")
     complaints = ComplaintHistory.objects.all().count()
     departments = Department.objects.all().count()
     users = CustomUser.objects.all().count()
@@ -130,11 +160,18 @@ def SuperAdminView(request):
         'departments': departments,
         'users': users
     }
-    return render(request, 'super_admin_dashboard.html', context)
+    if path.startswith('/super_admin/dashboard/') and user_role == 'Super Admin':
+        return render(request, 'super_admin_dashboard.html', context)
+    raise PermissionDenied("You are not authorized to view this page.")
 
 # Admin View
 def AdminView(request):
     user = request.user
+    path = request.path
+    try:
+        user_role = user.role
+    except AttributeError:
+        raise PermissionDenied("User profile not found.")
     created_complaint = Complaint.objects.filter(created_by = user).count()
     # Created Complaint Chart
     created_status_count = {
@@ -203,11 +240,18 @@ def AdminView(request):
         'assign_chart': assign_image_base64
     }
 
-    return render(request, 'admin_dashboard.html', context)
+    if path.startswith('/incharge/dashboard/') and user_role == 'Admin':
+        return render(request, 'admin_dashboard.html', context)
+    raise PermissionDenied("You are not authorized to view this page.")
 
 # Staff View
 def StaffView(request):
     user = request.user
+    path = request.path
+    try:
+        user_role = user.role
+    except AttributeError:
+        raise PermissionDenied("User profile not found.")
     created_complaints = Complaint.objects.filter(created_by=user).count()
     assigned_complaints = Complaint.objects.filter(assigned_to=user).count()
     status_count = {
@@ -273,4 +317,6 @@ def StaffView(request):
         'created_chart': image_base64,
         'assign_chart': assign_image_base64
     }
-    return render(request, 'staff_dashboard.html', context)
+    if path.startswith('/staff/dashboard/') and user_role == 'User':
+        return render(request, 'staff_dashboard.html', context)
+    raise PermissionDenied("You are not authorized to view this page.")

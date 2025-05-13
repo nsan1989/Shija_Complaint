@@ -12,6 +12,6 @@ urlpatterns = [
     path('staff/profile_details/', Profile, name='staff_profile'),
     path('incharge/profile_details/', Profile, name='incharge_profile'),
     path('super_admin/profile_details/', Profile, name='super_admin_profile'),
-    path('departments/', DepartmentView, name='departments'),
-    path('all_users/', UsersView, name='all_users'),
+    path('super_admin/departments/', DepartmentView, name='departments'),
+    path('super_admin/all_users/', UsersView, name='all_users'),
 ]
